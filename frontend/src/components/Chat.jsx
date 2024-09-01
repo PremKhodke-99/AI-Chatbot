@@ -1,7 +1,9 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import * as XLSX from 'xlsx';
 import { useMutation } from '@tanstack/react-query';
 import { IoSend } from "react-icons/io5";
-import { RiRobot3Fill } from "react-icons/ri";  
+import { RiRobot3Fill } from "react-icons/ri";
+import { MdAttachment } from "react-icons/md";
 import axios from 'axios'
 import './Chat.css'
 
@@ -9,9 +11,31 @@ const Chat = () => {
     const [message, setMessage] = useState("");
     const [isTyping, setIsTyping] = useState(false);
     const [threadId, setThreadId] = useState(null);
+    const [file, setFile] = useState(null);
     const [conversations, setConversations] = useState([
         { role: 'assistant', content: 'Hello! How can I assist you today?' }
     ]);
+
+    // convert Excel file to json 
+    const handleConvert = () => {
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const data = e.target.result;
+                const workbook = XLSX.read(data, { type: "array" });
+                const sheetname = workbook.SheetNames[0];
+                const worksheet = workbook.Sheets[sheetname];
+                const json = XLSX.utils.sheet_to_json(worksheet);
+                setMessage(JSON.stringify(json, null, 2));
+            };
+            reader.readAsArrayBuffer(file);
+        }
+    };
+
+    useEffect(() => {
+        handleConvert();
+    }, [file]);
+
 
     const sendMessageApi = async (message) => {
         const res = await axios.post('http://localhost:5000/ask', {
@@ -47,6 +71,7 @@ const Chat = () => {
         setIsTyping(true);
         mutation.mutate(currentMessage);
         setMessage('');
+        setFile(null);
     }
 
     return (
@@ -83,6 +108,13 @@ const Chat = () => {
                             className='input-message'
                             onChange={(e) => setMessage(e.target.value)}
                             onKeyDown={(e) => e.key === "Enter" && handleSubmitMessage}
+                        />
+                        <input
+                            type="file"
+                            accept='.xls,.xlsx,.csv'
+                            className='custom-file-input'
+                            id='file'
+                            onChange={(e) => setFile(e.target.files[0])}
                         />
                         <button type='submit' className='send-btn' onClick={handleSubmitMessage}>
                             {mutation?.isPending ? <IoSend className="icon-spin" /> : <IoSend />}
