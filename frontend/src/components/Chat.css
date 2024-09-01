@@ -1,7 +1,6 @@
 .header {
     width: 100vw;
     text-align: center;
-    padding: 20px;
 }
 
 .title {
@@ -10,7 +9,6 @@
 }
 
 .description {
-    margin-top: 10px;
     color: #777;
 }
 
@@ -56,7 +54,7 @@
     color: white;
 }
 
-.message.user strong{
+.message.user strong {
     text-align: end;
 }
 
@@ -85,12 +83,13 @@
     color: #333;
 }
 
-.message.assistant strong{
+.message.assistant strong {
     text-align: left;
 }
 
 .input-area {
     display: flex;
+    align-content: center;
     gap: 5px;
     padding: 10px;
     background-color: #fff;
@@ -120,4 +119,39 @@
 
 .send-btn:hover {
     background-color: #535bf2;
+}
+
+input[type="file"]{
+    width: 45px;
+}
+
+.custom-file-input {
+    color: transparent;
+}
+
+.custom-file-input::-webkit-file-upload-button {
+    visibility: hidden;
+}
+
+.custom-file-input::before {
+    content: "📎";
+    color: black;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 15px;
+    padding: 10px;
+    outline: none;
+    white-space: nowrap;
+    cursor: pointer;
+    text-shadow: 1px 1px #fff;
+    font-weight: 700;
+    font-size: 10pt;
+}
+
+.custom-file-input:hover::before {
+    border-color: #646cff;
+}
+
+.custom-file-input:active {
+    outline: 0;
 }
