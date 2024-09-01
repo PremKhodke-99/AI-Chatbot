@@ -59,7 +59,7 @@ app.post("/ask", async (req, res) => {
         model: "gpt-4o-mini",
         messages: [...conversationHistory, { role: "user", content: message }],
         thread_id: thread_id || null,
-        stream: false,
+        stream: true,
       },
       {
         Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
